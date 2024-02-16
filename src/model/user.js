@@ -1,17 +1,36 @@
 const { DataTypes } = require("sequelize");
 // dbconn file import
-const sequelize = require("../config/dbconn");
+const sequelizeCon = require("../config/dbconn");
 
 // schema
-const User = sequelize.define(
+const User = sequelizeCon.define(
   "User",
   {
     firstName: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+      defaultValue:"mmdnfjf",
+      //getter
+      get() {
+        const rawValue = this.getDataValue("firstName");
+        return rawValue ? rawValue.toUpperCase() : null;
+      },
     },
     lastName: {
       type: DataTypes.STRING,
+      // set(value) {
+      //   this.setDataValue("lastname:", value + ",-indian");
+      // },
+    },
+    //virtual
+    fullName: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return `${this.firstName} ${this.lastName}`;
+      },
+      set(value) {
+        throw new Error("do not try merge");
+      },
     },
   },
   {
